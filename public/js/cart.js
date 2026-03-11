@@ -1,11 +1,18 @@
-let cart = [];
+function addToCart(name, price){
 
-function addToCart(product) {
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  cart.push(product);
+let product = {
+name: name,
+price: price
+};
 
-  alert(product + " added to cart");
+cart.push(product);
 
-  console.log(cart);
+localStorage.setItem("cart", JSON.stringify(cart));
+
+alert(name + " added to cart");
 
 }
+
+
