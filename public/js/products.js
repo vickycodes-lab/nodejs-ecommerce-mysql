@@ -6,19 +6,19 @@ let container = document.getElementById("product-list");
 
 data.forEach(product => {
 
-let div = document.createElement("div");
+let card = document.createElement("div");
+card.classList.add("product-card");
 
-div.className = "product";
-
-div.innerHTML = `
+card.innerHTML = `
+<img src="/images/${product.image}" width="150">
 <h3>${product.name}</h3>
-<p>Price: ₹${product.price}</p>
+<p>₹${product.price}</p>
 <button onclick="addToCart('${product.name}',${product.price})">
 Add to Cart
 </button>
 `;
 
-container.appendChild(div);
+container.appendChild(card);
 
 });
 

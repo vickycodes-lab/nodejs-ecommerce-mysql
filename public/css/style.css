@@ -51,3 +51,39 @@ background:black;
 color:white;
 padding:10px;
 }
+
+#product-list{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+justify-content:center;
+margin-top:40px;
+}
+
+.product-card{
+border:1px solid #ddd;
+padding:20px;
+width:200px;
+text-align:center;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+background:white;
+}
+
+.product-card img{
+width:150px;
+height:150px;
+object-fit:cover;
+}
+
+.product-card button{
+background:black;
+color:white;
+border:none;
+padding:10px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.product-card button:hover{
+background:#444;
+}
