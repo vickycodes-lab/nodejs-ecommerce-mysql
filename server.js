@@ -10,13 +10,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL connection
-const db = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "rj7@Vicky16",
-  database: "ecommerce",
-  port: 3306
-});
+
+const db = mysql.createConnection(process.env.MYSQL_URL);
 
 // connect database
 db.connect((err)=>{
