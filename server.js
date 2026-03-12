@@ -52,6 +52,10 @@ app.get("/register.html",(req,res)=>{
   res.sendFile(path.join(__dirname,"views","register.html"));
 });
 
+app.get("/add-product.html",(req,res)=>{
+res.sendFile(path.join(__dirname,"views","add-product.html"));
+});
+
 // API to get products
 app.get("/products",(req,res)=>{
   db.query("SELECT * FROM products",(err,result)=>{
@@ -61,6 +65,26 @@ app.get("/products",(req,res)=>{
       res.json(result);
     }
   });
+});
+
+app.post("/add-product",(req,res)=>{
+
+const {name,price,image} = req.body;
+
+db.query(
+"INSERT INTO products (name,price,image) VALUES (?,?,?)",
+[name,price,image],
+(err,result)=>{
+
+if(err){
+console.log(err);
+res.send("Error adding product");
+}else{
+res.send("Product Added Successfully");
+}
+
+});
+
 });
 
 // Register API
