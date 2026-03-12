@@ -9,8 +9,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// MySQL connection
+// Render PORT fix
+const PORT = process.env.PORT || 3000;
 
+// MySQL connection (Railway)
 const db = mysql.createConnection(process.env.MYSQL_URL);
 
 // connect database
@@ -23,7 +25,7 @@ db.connect((err)=>{
   }
 });
 
-// static folders
+// static folder
 app.use(express.static(path.join(__dirname,"public")));
 
 // routes
@@ -48,41 +50,44 @@ app.get("/register.html",(req,res)=>{
 });
 
 app.get("/add-product.html",(req,res)=>{
-res.sendFile(path.join(__dirname,"views","add-product.html"));
+  res.sendFile(path.join(__dirname,"views","add-product.html"));
 });
 
-// API to get products
+// API get products
 app.get("/products",(req,res)=>{
   db.query("SELECT * FROM products",(err,result)=>{
     if(err){
-      res.send(err);
+      console.log(err);
+      res.send("Database error");
     }else{
       res.json(result);
     }
   });
 });
 
+// add product
 app.post("/add-product",(req,res)=>{
 
-const {name,price,image} = req.body;
+  const {name,price,image} = req.body;
 
-db.query(
-"INSERT INTO products (name,price,image) VALUES (?,?,?)",
-[name,price,image],
-(err,result)=>{
+  db.query(
+    "INSERT INTO products (name,price,image) VALUES (?,?,?)",
+    [name,price,image],
+    (err,result)=>{
 
-if(err){
-console.log(err);
-res.send("Error adding product");
-}else{
-res.send("Product Added Successfully");
-}
+      if(err){
+        console.log(err);
+        res.send("Error adding product");
+      }else{
+        res.send("Product Added Successfully");
+      }
+
+    }
+  );
 
 });
 
-});
-
-// Register API
+// register
 app.post("/register",(req,res)=>{
 
   const {name,email,password} = req.body;
@@ -104,7 +109,7 @@ app.post("/register",(req,res)=>{
 
 });
 
-// Login API
+// login
 app.post("/login",(req,res)=>{
 
   const {email,password} = req.body;
@@ -129,6 +134,6 @@ app.post("/login",(req,res)=>{
 });
 
 // start server
-app.listen(3000,()=>{
-  console.log("Server running on port 3000");
+app.listen(PORT,()=>{
+  console.log("Server running on port " + PORT);
 });
