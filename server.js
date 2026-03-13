@@ -53,6 +53,10 @@ app.get("/add-product.html",(req,res)=>{
   res.sendFile(path.join(__dirname,"views","add-product.html"));
 });
 
+app.get("/orders.html",(req,res)=>{
+  res.sendFile(path.join(__dirname,"views","orders.html"));
+});
+
 // API get products
 app.get("/products",(req,res)=>{
   db.query("SELECT * FROM products",(err,result)=>{
