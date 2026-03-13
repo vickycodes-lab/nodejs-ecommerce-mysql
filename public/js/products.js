@@ -4,6 +4,8 @@ fetch("/products")
 
 let container = document.getElementById("product-list");
 
+container.innerHTML = ""; // clear old products
+
 data.forEach(product => {
 
 let card = document.createElement("div");
@@ -22,4 +24,5 @@ container.appendChild(card);
 
 });
 
-});
+})
+.catch(err => console.log("Error loading products:", err));

@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Render PORT fix
+// Render PORT
 const PORT = process.env.PORT || 3000;
 
 // MySQL connection (Railway)
@@ -28,7 +28,10 @@ db.connect((err)=>{
 // static folder
 app.use(express.static(path.join(__dirname,"public")));
 
-// routes
+
+// ================= ROUTES =================
+
+// home
 app.get("/",(req,res)=>{
   res.sendFile(path.join(__dirname,"views","index.html"));
 });
@@ -57,7 +60,10 @@ app.get("/orders.html",(req,res)=>{
   res.sendFile(path.join(__dirname,"views","orders.html"));
 });
 
-// API get products
+
+// ================= API =================
+
+// get products
 app.get("/products",(req,res)=>{
   db.query("SELECT * FROM products",(err,result)=>{
     if(err){
@@ -68,6 +74,7 @@ app.get("/products",(req,res)=>{
     }
   });
 });
+
 
 // add product
 app.post("/add-product",(req,res)=>{
@@ -91,6 +98,60 @@ app.post("/add-product",(req,res)=>{
 
 });
 
+
+// ================= CART SYSTEM =================
+
+// add to cart
+app.post("/add-to-cart",(req,res)=>{
+
+  const {user_id,product_id,quantity} = req.body;
+
+  db.query(
+    "INSERT INTO cart (user_id,product_id,quantity) VALUES (?,?,?)",
+    [user_id,product_id,quantity],
+    (err,result)=>{
+
+      if(err){
+        console.log(err);
+        res.send("Cart Error");
+      }else{
+        res.send("Product Added To Cart");
+      }
+
+    }
+  );
+
+});
+
+
+// load cart
+app.get("/cart/:user_id",(req,res)=>{
+
+  const user_id = req.params.user_id;
+
+  db.query(
+    `SELECT products.id,products.name,products.price,products.image,cart.quantity
+     FROM cart
+     JOIN products ON cart.product_id = products.id
+     WHERE cart.user_id=?`,
+    [user_id],
+    (err,result)=>{
+
+      if(err){
+        console.log(err);
+        res.send("Cart Load Error");
+      }else{
+        res.json(result);
+      }
+
+    }
+  );
+
+});
+
+
+// ================= USER =================
+
 // register
 app.post("/register",(req,res)=>{
 
@@ -112,6 +173,7 @@ app.post("/register",(req,res)=>{
   );
 
 });
+
 
 // login
 app.post("/login",(req,res)=>{
@@ -136,6 +198,7 @@ app.post("/login",(req,res)=>{
   );
 
 });
+
 
 // start server
 app.listen(PORT,()=>{

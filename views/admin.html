@@ -3,6 +3,44 @@
 
 <head>
 <title>Admin Panel</title>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+background:#f4f4f4;
+}
+
+form{
+background:white;
+padding:20px;
+width:300px;
+margin:auto;
+border-radius:10px;
+box-shadow:0 0 10px gray;
+}
+
+input{
+width:90%;
+padding:10px;
+margin:10px;
+}
+
+button{
+padding:10px 20px;
+background:green;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+button:hover{
+background:darkgreen;
+}
+
+</style>
+
 </head>
 
 <body>
@@ -11,15 +49,19 @@
 
 <form action="/add-product" method="POST">
 
-<input type="text" name="name" placeholder="Product Name" required><br><br>
+<input type="text" name="name" placeholder="Product Name" required>
 
-<input type="number" name="price" placeholder="Price" required><br><br>
+<input type="number" name="price" placeholder="Price" required>
 
-<input type="text" name="image" placeholder="Image Name (example laptop.png)" required><br><br>
+<input type="text" name="image" placeholder="Image Name (example laptop.png)" required>
 
 <button type="submit">Add Product</button>
 
 </form>
+
+<br>
+
+<a href="/products.html">View Products</a>
 
 </body>
 
