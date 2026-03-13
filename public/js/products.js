@@ -15,7 +15,7 @@ card.innerHTML = `
 <img src="/images/${product.image}" width="150">
 <h3>${product.name}</h3>
 <p>₹${product.price}</p>
-<button onclick="addToCart('${product.name}',${product.price})">
+<button onclick="addToCart(${product.id})">
 Add to Cart
 </button>
 `;
