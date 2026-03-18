@@ -13,20 +13,35 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 
 // MySQL connection (Railway)
-const db = mysql.createConnection(process.env.MYSQL_URL);
-
-// connect database
-db.connect((err)=>{
-  if(err){
-    console.log("Database connection failed");
-    console.log(err);
-  }else{
-    console.log("MySQL Connected");
-  }
-});
+let db;
+if (process.env.MYSQL_URL) {
+  db = mysql.createConnection(process.env.MYSQL_URL);
+  
+  // connect database
+  db.connect((err)=>{
+    if(err){
+      console.log("Database connection failed");
+      console.log(err);
+    }else{
+      console.log("MySQL Connected");
+    }
+  });
+} else {
+  console.log("No MYSQL_URL defined. Running without database connection.");
+  // Provide a dummy db object so the app doesn't crash on db.query later
+  db = {
+    query: (query, params, callback) => {
+      if (typeof params === 'function') {
+        callback = params;
+      }
+      if (callback) callback(new Error("Database offline"), []);
+    }
+  };
+}
 
 // static folder
 app.use(express.static(path.join(__dirname,"public")));
+app.use("/public", express.static(path.join(__dirname,"public")));
 
 
 // ================= ROUTES =================
@@ -104,20 +119,20 @@ app.post("/add-product",(req,res)=>{
 // add to cart
 app.post("/add-to-cart",(req,res)=>{
 
+  console.log("BODY:", req.body); // 
+
   const {user_id,product_id,quantity} = req.body;
 
   db.query(
     "INSERT INTO cart (user_id,product_id,quantity) VALUES (?,?,?)",
     [user_id,product_id,quantity],
-    (err,result)=>{
-
+    (err)=>{
       if(err){
-        console.log(err);
+        console.log("DB ERROR:", err); 
         res.send("Cart Error");
       }else{
         res.send("Product Added To Cart");
       }
-
     }
   );
 
@@ -196,6 +211,44 @@ app.post("/login",(req,res)=>{
 
     }
   );
+
+});
+
+app.post("/place-order",(req,res)=>{
+
+const user_id = 1;
+
+db.query(
+"SELECT cart.*, products.price FROM cart JOIN products ON cart.product_id = products.id WHERE cart.user_id=?",
+[user_id],
+(err,cartItems)=>{
+
+if(err) return res.send("Error");
+
+let total = 0;
+
+cartItems.forEach(item=>{
+total += item.price * item.quantity;
+});
+
+db.query(
+"INSERT INTO orders (user_id,total_price) VALUES (?,?)",
+[user_id,total],
+(err,orderResult)=>{
+
+if(err) return res.send("Order Error");
+
+const order_id = orderResult.insertId;
+
+
+
+db.query("DELETE FROM cart WHERE user_id=?",[user_id],()=>{
+
+res.send("Order Placed Successfully");
+
+});
+
+});
 
 });
 

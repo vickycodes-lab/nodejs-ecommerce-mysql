@@ -3,7 +3,21 @@
 
 <head>
 <title>Cart</title>
-<link rel="stylesheet" href="/css/style.css">
+<style>
+body{
+  font-family: Arial;
+  padding: 20px;
+}
+
+button{
+  padding: 10px 20px;
+  background: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+</style>
 </head>
 
 <body>
@@ -12,9 +26,12 @@
 
 <div id="cart-items"></div>
 
-<h2 id="total"></h2>
+<h2 id="total">Total: ₹0</h2>
 
-<script src="/js/cart-page.js"></script>
+<!-- ✅ IMPORTANT BUTTON -->
+<button onclick="checkout()">Checkout</button>
+
+<script src="../public/js/cart.js"></script>
 
 </body>
 
